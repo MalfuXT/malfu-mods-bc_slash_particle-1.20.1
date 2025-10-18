@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": {
+    "simplyswords:harbinger": {
+      "color_hex": "00BFFF",
+      "light": true
+    }
+  }
+}

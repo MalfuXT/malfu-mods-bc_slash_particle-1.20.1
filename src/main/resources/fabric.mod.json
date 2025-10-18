@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "malfu-mods",
+	"version": "${version}",
+	"name": "Better Combat Particle Addition",
+	"description": "Particle addition for better combat attack animation",
+	"authors": [
+		"Malfu"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/bc_particle/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"malfu.bc_particle.BetterCombatParticleMods"
+		],
+		"client": [
+			"malfu.bc_particle.BetterCombatParticleClientMods"
+		]
+	},
+	"mixins": [
+		"bc_particle.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
