@@ -113,9 +113,9 @@ public class SlashParticle180 extends SpriteBillboardParticle {
     public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
         Vec3d cameraPos = camera.getPos();
 
-        float x = (float)(this.prevPosX + (this.x - this.prevPosX) * tickDelta - cameraPos.getX());
-        float y = (float)(this.prevPosY + (this.y - this.prevPosY) * tickDelta - cameraPos.getY());
-        float z = (float)(this.prevPosZ + (this.z - this.prevPosZ) * tickDelta - cameraPos.getZ());
+        float x = (float)(this.prevPosX - cameraPos.getX());
+        float y = (float)(this.prevPosY - cameraPos.getY());
+        float z = (float)(this.prevPosZ - cameraPos.getZ());
 
         float size = this.getSize(tickDelta);
         float minU = this.getMinU();
