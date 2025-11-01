@@ -27,6 +27,7 @@ public class NetworkHandler {
             boolean isOffhand = buf.readBoolean();
             boolean light = buf.readBoolean();
             String colorHex = buf.readString();
+            String colorHexSec = buf.readString();
 
             // Execute on server thread
             server.execute(() -> {
@@ -48,6 +49,7 @@ public class NetworkHandler {
                         newBuf.writeBoolean(isOffhand);
                         newBuf.writeBoolean(light);
                         newBuf.writeString(colorHex);
+                        newBuf.writeString(colorHexSec);
 
                         ServerPlayNetworking.send(otherPlayer, SPAWN_ATTACK_PARTICLE_PACKET, newBuf);
                     }
@@ -58,7 +60,7 @@ public class NetworkHandler {
 
     // Client-side method to send the packet
     public static void sendParticlePacket(String animationName, double x, double y, double z, double xStab, double yStab, double zStab,
-                                          float pitch, float yaw, float weaponRange, boolean isOffhand, boolean light, String colorHex) {
+                                          float pitch, float yaw, float weaponRange, boolean isOffhand, boolean light, String colorHex, String colorHexSec) {
         if (ClientPlayNetworking.canSend(SPAWN_ATTACK_PARTICLE_PACKET)) {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeString(animationName);
@@ -74,6 +76,7 @@ public class NetworkHandler {
             buf.writeBoolean(isOffhand);
             buf.writeBoolean(light);
             buf.writeString(colorHex);
+            buf.writeString(colorHexSec);
 
             ClientPlayNetworking.send(SPAWN_ATTACK_PARTICLE_PACKET, buf);
         }

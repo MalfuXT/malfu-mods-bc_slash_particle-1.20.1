@@ -3,6 +3,7 @@
   "values": {
     "simplyswords:harbinger": {
       "color_hex": "00BFFF",
+      "color_hex_sec": "003052",
       "light": true
     }
   }

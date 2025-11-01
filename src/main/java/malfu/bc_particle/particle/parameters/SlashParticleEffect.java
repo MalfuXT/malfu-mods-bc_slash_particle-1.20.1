@@ -24,7 +24,6 @@ public class SlashParticleEffect implements ParticleEffect {
             float localYaw = stringReader.readFloat();
             stringReader.expect(' ');
             float roll = stringReader.readFloat();
-
             stringReader.expect(' ');
             boolean light = stringReader.readBoolean();
             stringReader.expect(' ');

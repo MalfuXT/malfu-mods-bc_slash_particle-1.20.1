@@ -3,7 +3,6 @@ package malfu.bc_particle.particle;
 import malfu.bc_particle.BetterCombatParticleMods;
 import malfu.bc_particle.config.ParticleSettings;
 import malfu.bc_particle.network.NetworkHandler;
-import malfu.bc_particle.particle.custom.*;
 import malfu.bc_particle.particle.parameters.SlashParticleEffect;
 import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.WeaponAttributes;
@@ -14,7 +13,7 @@ import java.util.List;
 
 public class BCParticleUtil {
     public static void spawnParticleForSettings(ClientPlayerEntity player, AttackHand hand, List<ParticleSettings> settingsList, float weaponRange,
-                                                boolean light, String colorHex) {
+                                                boolean light, String colorHex, String colorHexSec) {
         for (ParticleSettings settings : settingsList) {
             boolean isOffhand = hand.isOffHand();
             float offhandRoll = isOffhand ? 180 : 0;
@@ -60,7 +59,8 @@ public class BCParticleUtil {
                         weaponRange,
                         isOffhand,
                         light,
-                        colorHex
+                        colorHex,
+                        colorHexSec
                 );
             }
 
@@ -69,48 +69,88 @@ public class BCParticleUtil {
             switch (settings.particleType()) {
                 case "stab":
                     player.getWorld().addParticle(
-                            new SlashParticleEffect(ModParticles.STAB ,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                            new SlashParticleEffect(ModParticles.BOTSTAB,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
                                     settings.localYaw()*offhandFlip ,(settings.rollSet() -45 + offhandRoll)*offhandFlip , light, colorHex),
                             xStab, yStab, zStab, 0, 0, 0
                     );
                     player.getWorld().addParticle(
-                            new SlashParticleEffect(ModParticles.STAB ,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                            new SlashParticleEffect(ModParticles.BOTSTAB,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
                                     settings.localYaw()*offhandFlip ,(settings.rollSet() +45 + offhandRoll)*offhandFlip , light, colorHex),
+                            xStab, yStab, zStab, 0, 0, 0
+                    );
+
+                    player.getWorld().addParticle(
+                            new SlashParticleEffect(ModParticles.TOPSTAB,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                                    settings.localYaw()*offhandFlip ,(settings.rollSet() -45 + offhandRoll)*offhandFlip , light, colorHexSec),
+                            xStab, yStab, zStab, 0, 0, 0
+                    );
+                    player.getWorld().addParticle(
+                            new SlashParticleEffect(ModParticles.TOPSTAB,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                                    settings.localYaw()*offhandFlip ,(settings.rollSet() +45 + offhandRoll)*offhandFlip , light, colorHexSec),
                             xStab, yStab, zStab, 0, 0, 0
                     );
                     break;
                 case "slash45":
                     player.getWorld().addParticle(
-                            new SlashParticleEffect(ModParticles.SLASH45 ,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                            new SlashParticleEffect(ModParticles.BOTSLASH45,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
                                     settings.localYaw()*offhandFlip ,(settings.rollSet() + offhandRoll)*offhandFlip , light, colorHex),
+                            x, y, z, 0, 0, 0
+                    );
+
+                    player.getWorld().addParticle(
+                            new SlashParticleEffect(ModParticles.TOPSLASH45,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                                    settings.localYaw()*offhandFlip ,(settings.rollSet() + offhandRoll)*offhandFlip , light, colorHexSec),
                             x, y, z, 0, 0, 0
                     );
                     break;
                 case "slash90":
                     player.getWorld().addParticle(
-                            new SlashParticleEffect(ModParticles.SLASH90 ,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                            new SlashParticleEffect(ModParticles.BOTSLASH90,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
                                     settings.localYaw()*offhandFlip ,(settings.rollSet() + offhandRoll)*offhandFlip , light, colorHex),
+                            x, y, z, 0, 0, 0
+                    );
+                    player.getWorld().addParticle(
+                            new SlashParticleEffect(ModParticles.TOPSLASH90,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                                    settings.localYaw()*offhandFlip ,(settings.rollSet() + offhandRoll)*offhandFlip , light, colorHexSec),
                             x, y, z, 0, 0, 0
                     );
                     break;
                 case "slash180":
                     player.getWorld().addParticle(
-                            new SlashParticleEffect(ModParticles.SLASH180 ,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                            new SlashParticleEffect(ModParticles.BOTSLASH180,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
                                     settings.localYaw()*offhandFlip ,(settings.rollSet() + offhandRoll)*offhandFlip , light, colorHex),
+                            x, y, z, 0, 0, 0
+                    );
+
+                    player.getWorld().addParticle(
+                            new SlashParticleEffect(ModParticles.TOPSLASH180,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                                    settings.localYaw()*offhandFlip ,(settings.rollSet() + offhandRoll)*offhandFlip , light, colorHexSec),
                             x, y, z, 0, 0, 0
                     );
                     break;
                 case "slash270":
                     player.getWorld().addParticle(
-                            new SlashParticleEffect(ModParticles.SLASH270 ,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                            new SlashParticleEffect(ModParticles.BOTSLASH270,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
                                     settings.localYaw()*offhandFlip ,(settings.rollSet() + offhandRoll)*offhandFlip , light, colorHex),
+                            x, y, z, 0, 0, 0
+                    );
+
+                    player.getWorld().addParticle(
+                            new SlashParticleEffect(ModParticles.TOPSLASH270,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                                    settings.localYaw()*offhandFlip ,(settings.rollSet() + offhandRoll)*offhandFlip , light, colorHexSec),
                             x, y, z, 0, 0, 0
                     );
                     break;
                 case "slash360":
                     player.getWorld().addParticle(
-                            new SlashParticleEffect(ModParticles.SLASH360 ,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                            new SlashParticleEffect(ModParticles.BOTSLASH360,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
                                     settings.localYaw()*offhandFlip ,(settings.rollSet() + offhandRoll)*offhandFlip , light, colorHex),
+                            x, y, z, 0, 0, 0
+                    );
+
+                    player.getWorld().addParticle(
+                            new SlashParticleEffect(ModParticles.TOPSLASH360,weaponRange, player.getPitch()+settings.pitchAddition(), player.getYaw(),
+                                    settings.localYaw()*offhandFlip ,(settings.rollSet() + offhandRoll)*offhandFlip , light, colorHexSec),
                             x, y, z, 0, 0, 0
                     );
                     break;

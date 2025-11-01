@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class ColorChangerSettings {
     // Default colors
-    public static final ColorLightSettings DEFAULT_ENCHANTED = new ColorLightSettings("D3C4FF", false);
-    public static final ColorLightSettings DEFAULT_NORMAL = new ColorLightSettings("FFFFFF", false);
+    public static final ColorLightSettings DEFAULT_ENCHANTED = new ColorLightSettings("e8e0ff", "b9a1ff" , false);
+    public static final ColorLightSettings DEFAULT_NORMAL = new ColorLightSettings("FFFFFF", "D9D9D9", false);
 
     public static ColorLightSettings resolveWeaponEffects(ItemStack itemStack) {
         // 1. Check for specific weapon settings (highest priority)

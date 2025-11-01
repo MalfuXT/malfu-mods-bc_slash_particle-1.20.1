@@ -74,6 +74,7 @@ public class EnchantmentSettingsLoader implements SimpleResourceReloadListener<M
     private ColorLightSettings parseSettings(JsonObject json) {
         return new ColorLightSettings(
                 JsonHelper.getString(json, "color_hex", "FFFFFF"),
+                JsonHelper.getString(json, "color_hex_sec", "D9D9D9"),
                 JsonHelper.getBoolean(json, "light", true)
         );
     }

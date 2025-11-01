@@ -9,8 +9,6 @@ import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 
 import java.util.List;
 
@@ -19,12 +17,19 @@ public class BetterCombatParticleClientMods implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         //Particle
-        ParticleFactoryRegistry.getInstance().register(ModParticles.STAB, StabParticle.Provider::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.SLASH45, SlashParticle45.Provider::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.SLASH90, SlashParticle90.Provider::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.SLASH180, SlashParticle180.Provider::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.SLASH270, SlashParticle270.Provider::new);
-        ParticleFactoryRegistry.getInstance().register(ModParticles.SLASH360, SlashParticle360.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.BOTSTAB, StabParticleBot.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.BOTSLASH45, BotSlashParticle45.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.BOTSLASH90, BotSlashParticle90.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.BOTSLASH180, BotSlashParticle180.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.BOTSLASH270, BotSlashParticle270.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.BOTSLASH360, BotSlashParticle360.Provider::new);
+
+        ParticleFactoryRegistry.getInstance().register(ModParticles.TOPSTAB, StabParticleTop.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.TOPSLASH45, TopSlashParticle45.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.TOPSLASH90, TopSlashParticle90.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.TOPSLASH180, TopSlashParticle180.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.TOPSLASH270, TopSlashParticle270.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.TOPSLASH360, TopSlashParticle360.Provider::new);
 
 
         BetterCombatClientEvents.ATTACK_HIT.register(((player, hand, list, entity) -> {
@@ -40,13 +45,12 @@ public class BetterCombatParticleClientMods implements ClientModInitializer {
                 // 1. Get the settings for this specific animation
                 List<ParticleSettings> settings = ParticleSettingsLoader.INSTANCE.getSettings(animationName);
                 ColorLightSettings colorLightSettings = ColorChangerSettings.resolveWeaponEffects(hand.itemStack());
-                System.out.println(animationName);
 
 
                 // 2. Spawn the particle
                 if(BetterCombatParticleMods.config.triggerParticle){
                     BCParticleUtil.spawnParticleForSettings(player, hand, settings, (float) hand.attributes().attackRange(),
-                            colorLightSettings.light(), colorLightSettings.colorHex());
+                            colorLightSettings.light(), colorLightSettings.colorHex(), colorLightSettings.colorHexSec());
                 }
 
             }

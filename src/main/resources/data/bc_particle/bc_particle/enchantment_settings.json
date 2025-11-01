@@ -2,7 +2,8 @@
   "replace": false,
   "values": {
     "minecraft:fire_aspect": {
-      "color_hex": "FFAB36",
+      "color_hex": "ffce00",
+      "color_hex_sec": "ff5a00",
       "light": true
     }
   }

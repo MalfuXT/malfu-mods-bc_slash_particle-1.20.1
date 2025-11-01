@@ -39,10 +39,11 @@
     "bettercombat:one_handed_slam": [
       {
         "particle_type": "slash180",
-        "x_addition": 0.0,
+        "x_addition": 0.05,
         "y_addition": -0.1,
         "pitch_addition": 0.0,
-        "roll_set": -90.0
+        "local_yaw": 45,
+        "roll_set": -85.0
       }
     ],
     "bettercombat:one_handed_stab": {
@@ -198,6 +199,7 @@
         "x_addition": 0.1,
         "y_addition": -0.1,
         "pitch_addition": 0.0,
+        "local_yaw": 45,
         "roll_set": -86.0
       }
     ],
@@ -207,6 +209,7 @@
         "x_addition": 0.1,
         "y_addition": -0.1,
         "pitch_addition": 0.0,
+        "local_yaw": 45,
         "roll_set": -86.0
       }
     ]
