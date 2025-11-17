@@ -23,6 +23,9 @@ public class BetterCombatParticleMods implements ModInitializer {
 		// Intuitive way to load a config :)
 		config = AutoConfig.getConfigHolder(ConfigWrapper.class).getConfig().config;
 
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(ParticleSettingsLoader.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(WeaponSettingsLoader.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(EnchantmentSettingsLoader.INSTANCE);
 		ModParticles.registerParticles();
 		NetworkHandler.register();
 	}

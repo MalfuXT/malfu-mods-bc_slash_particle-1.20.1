@@ -59,11 +59,6 @@ public class BotSlashParticle180 extends SpriteBillboardParticle {
     }
 
     public float getAlpha(){
-        if(color.equals("remove")){
-            return this.alpha = 0;
-        }
-
-
         if(light) {
            return this.alpha = BetterCombatParticleMods.config.light_particle_alpha;
         } else {
@@ -123,12 +118,6 @@ public class BotSlashParticle180 extends SpriteBillboardParticle {
 
     @Override
     public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
-        buildGeoHelper(vertexConsumer, camera, tickDelta, 0);
-        buildGeoHelper(vertexConsumer, camera, tickDelta, 0.015f);
-        buildGeoHelper(vertexConsumer, camera, tickDelta, -0.015f);
-    }
-
-    private void buildGeoHelper(VertexConsumer vertexConsumer, Camera camera, float tickDelta, float offsetAdd) {
         Vec3d cameraPos = camera.getPos();
 
         float x = (float)(this.prevPosX - cameraPos.getX());
@@ -150,10 +139,10 @@ public class BotSlashParticle180 extends SpriteBillboardParticle {
 
         // Define the four corners of the particle quad (centered at origin)
         Vector4f[] corners = {
-                new Vector4f(-size, this.modelOffset+offsetAdd, -size, 1), // Bottom-left
-                new Vector4f(-size, this.modelOffset+offsetAdd,  size, 1), // Bottom-right
-                new Vector4f( size, this.modelOffset+offsetAdd,  size, 1), // Top-right
-                new Vector4f( size, this.modelOffset+offsetAdd, -size, 1),  // Top-left
+                new Vector4f(-size, this.modelOffset, -size, 1), // Bottom-left
+                new Vector4f(-size, this.modelOffset,  size, 1), // Bottom-right
+                new Vector4f( size, this.modelOffset,  size, 1), // Top-right
+                new Vector4f( size, this.modelOffset, -size, 1)  // Top-left
         };
 
         // Apply rotation to each corner

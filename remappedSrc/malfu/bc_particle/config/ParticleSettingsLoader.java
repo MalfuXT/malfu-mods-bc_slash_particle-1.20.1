@@ -4,8 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -19,17 +17,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
-public class ParticleSettingsLoader implements SimpleSynchronousResourceReloadListener {
+public class ParticleSettingsLoader implements SimpleResourceReloadListener<Map<String, List<ParticleSettings>>> {
 
     public static final ParticleSettingsLoader INSTANCE = new ParticleSettingsLoader();
     private Map<String, List<ParticleSettings>> settingsMap = new HashMap<>();
 
     @Override
-    public void reload(ResourceManager resourceManager) {
+    public CompletableFuture<Map<String, List<ParticleSettings>>> load(ResourceManager manager, Profiler profiler, Executor executor) {
+        return CompletableFuture.supplyAsync(() -> this.prepare(manager, profiler), executor);
+    }
+
+    @Override
+    public CompletableFuture<Void> apply(Map<String, List<ParticleSettings>> data, ResourceManager manager, Profiler profiler, Executor executor) {
+        return CompletableFuture.runAsync(() -> this.applySettings(data), executor);
+    }
+
+    private Map<String, List<ParticleSettings>> prepare(ResourceManager resourceManager, Profiler profiler) {
         Map<String, List<ParticleSettings>> combinedMap = new HashMap<>();
 
-        // Look in DATA packs (data/<namespace>/bc_particle/particle_settings.json)
         Map<Identifier, Resource> resourceMap = resourceManager.findResources("bc_particle", path -> path.getPath().endsWith(".json"));
 
         for (Identifier resourceId : resourceMap.keySet()) {
@@ -77,9 +85,7 @@ public class ParticleSettingsLoader implements SimpleSynchronousResourceReloadLi
                 e.printStackTrace();
             }
         }
-
-        this.settingsMap = combinedMap;
-        System.out.println("[BC Particles] Loaded settings for " + combinedMap.size() + " animations from client");
+        return combinedMap;
     }
 
     private ParticleSettings parseSettings(JsonObject json) {
@@ -94,6 +100,11 @@ public class ParticleSettingsLoader implements SimpleSynchronousResourceReloadLi
         );
     }
 
+    private void applySettings(Map<String, List<ParticleSettings>> newSettingsMap) {
+        this.settingsMap = newSettingsMap;
+        System.out.println("[BC Particles] Loaded settings for " + newSettingsMap.size() + " animations.");
+    }
+
     @Override
     public Identifier getFabricId() {
         return new Identifier("bc_particle", "settings_loader");
@@ -102,13 +113,5 @@ public class ParticleSettingsLoader implements SimpleSynchronousResourceReloadLi
     public List<ParticleSettings> getSettings(String animationName) {
         // Return the list of settings for the animation, or a default list if not found
         return this.settingsMap.getOrDefault(animationName, List.of(ParticleSettings.DEFAULT));
-    }
-
-    // Helper method to force immediate load
-    public static void loadNow() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client != null && client.getResourceManager() != null) {
-            INSTANCE.reload(client.getResourceManager());
-        }
     }
 }

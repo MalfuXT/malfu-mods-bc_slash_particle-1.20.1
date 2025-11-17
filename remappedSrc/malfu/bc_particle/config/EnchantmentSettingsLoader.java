@@ -2,8 +2,6 @@ package malfu.bc_particle.config;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -18,25 +16,36 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class EnchantmentSettingsLoader implements SimpleSynchronousResourceReloadListener {
+public class EnchantmentSettingsLoader implements SimpleResourceReloadListener<Map<String, ColorLightSettings>> {
 
     public static final EnchantmentSettingsLoader INSTANCE = new EnchantmentSettingsLoader();
     private Map<String, ColorLightSettings> settingsMap = new HashMap<>();
 
     @Override
-    public void reload(ResourceManager resourceManager) {
+    public CompletableFuture<Map<String, ColorLightSettings>> load(ResourceManager manager, Profiler profiler, Executor executor) {
+        return CompletableFuture.supplyAsync(() -> this.prepare(manager, profiler), executor);
+    }
+
+    @Override
+    public CompletableFuture<Void> apply(Map<String, ColorLightSettings> data, ResourceManager manager, Profiler profiler, Executor executor) {
+        return CompletableFuture.runAsync(() -> this.applySettings(data), executor);
+    }
+
+    private Map<String, ColorLightSettings> prepare(ResourceManager resourceManager, Profiler profiler) {
         Map<String, ColorLightSettings> combinedMap = new HashMap<>();
 
+        // FIXED: findResources returns Map<Identifier, Resource>, not Collection<Identifier>
         Map<Identifier, Resource> resourceMap = resourceManager.findResources("bc_particle", path -> path.getPath().endsWith(".json"));
 
-
         for (Identifier resourceId : resourceMap.keySet()) {
+            // Check if the file is named 'particle_settings.json'
             String path = resourceId.getPath();
             if (!path.endsWith("enchantment_settings.json")) {
-                continue;
+                continue; // Skip files that aren't the settings file
             }
 
             try {
+                // Get the resource for this specific path
                 Resource resource = resourceMap.get(resourceId);
                 try (InputStream stream = resource.getInputStream();
                      Reader reader = new InputStreamReader(stream)) {
@@ -47,6 +56,7 @@ public class EnchantmentSettingsLoader implements SimpleSynchronousResourceReloa
                     for (String enchantmentId : valuesObject.keySet()) {
                         JsonObject settingsObject = JsonHelper.getObject(valuesObject, enchantmentId);
                         ColorLightSettings settings = parseSettings(settingsObject);
+                        // Later resources (higher priority datapacks) will override earlier ones
                         combinedMap.put(enchantmentId, settings);
                     }
                 } catch (Exception e) {
@@ -58,9 +68,7 @@ public class EnchantmentSettingsLoader implements SimpleSynchronousResourceReloa
                 e.printStackTrace();
             }
         }
-
-        this.settingsMap = combinedMap;
-        System.out.println("[BC Particles] Loaded enchantment settings for " + combinedMap.size() + " enchantments from client");
+        return combinedMap;
     }
 
     private ColorLightSettings parseSettings(JsonObject json) {
@@ -71,20 +79,18 @@ public class EnchantmentSettingsLoader implements SimpleSynchronousResourceReloa
         );
     }
 
+    private void applySettings(Map<String, ColorLightSettings> newSettingsMap) {
+        this.settingsMap = newSettingsMap;
+        System.out.println("[BC Particles] Loaded enchantment settings for " + newSettingsMap.size() + " enchantment.");
+    }
+
     @Override
     public Identifier getFabricId() {
         return new Identifier("bc_particle", "enchantment_settings_loader");
     }
 
     public ColorLightSettings getSettings(String enchantmentId) {
+        // Return the list of settings for the animation, or a default list if not found
         return this.settingsMap.getOrDefault(enchantmentId, null);
-    }
-
-    // Helper method to force immediate load
-    public static void loadNow() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client != null && client.getResourceManager() != null) {
-            INSTANCE.reload(client.getResourceManager());
-        }
     }
 }

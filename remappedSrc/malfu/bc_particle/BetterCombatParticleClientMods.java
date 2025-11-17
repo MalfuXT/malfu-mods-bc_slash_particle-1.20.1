@@ -8,11 +8,7 @@ import malfu.bc_particle.particle.custom.*;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.api.client.BetterCombatClientEvents;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.resource.ResourceType;
 
 import java.util.List;
 
@@ -20,15 +16,6 @@ public class BetterCombatParticleClientMods implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(ParticleSettingsLoader.INSTANCE);
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(WeaponSettingsLoader.INSTANCE);
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(EnchantmentSettingsLoader.INSTANCE);
-        ParticleSettingsLoader.loadNow();
-        WeaponSettingsLoader.loadNow();
-        EnchantmentSettingsLoader.loadNow();
-
-
         //Particle
         ParticleFactoryRegistry.getInstance().register(ModParticles.BOTSTAB, StabParticleBot.Provider::new);
         ParticleFactoryRegistry.getInstance().register(ModParticles.BOTSLASH45, BotSlashParticle45.Provider::new);
@@ -61,11 +48,10 @@ public class BetterCombatParticleClientMods implements ClientModInitializer {
 
 
                 // 2. Spawn the particle
-                BCParticleUtil.spawnParticleForSettings(player, hand, settings, (float) hand.attributes().attackRange(),
-                        colorLightSettings.light(), colorLightSettings.colorHex(), colorLightSettings.colorHexSec());
-
-                BCParticleUtil.sendPacketParticleData(player, hand, settings, (float) hand.attributes().attackRange(),
-                        colorLightSettings.light(), colorLightSettings.colorHex(), colorLightSettings.colorHexSec());
+                if(BetterCombatParticleMods.config.triggerParticle){
+                    BCParticleUtil.spawnParticleForSettings(player, hand, settings, (float) hand.attributes().attackRange(),
+                            colorLightSettings.light(), colorLightSettings.colorHex(), colorLightSettings.colorHexSec());
+                }
 
             }
         }));
